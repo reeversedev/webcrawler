@@ -19,3 +19,9 @@ npm install -g express
 ```
 npm install
 ```
+
+### Starting the server
+
+```
+npm start
+```
