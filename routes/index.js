@@ -35,30 +35,44 @@ router.get('/scrape', function (req, res, next) {
     'https://www.carworkz.com/mumbai/regular-service?format=json&page=26',
   ];
   urlLinks.map((url, index) => {
-    console.log(index);
+    // console.log(index);
     request(url, function (error, response, html) {
       if (error) {
         console.log(error);
       }
-      if (html) {
-        html = JSON.parse(html);
-        if (html.listing) {
-          var $ = cheerio.load(html.listing);
+      if (response.body) {
+        var $ = cheerio.load(response.body);
+
+        $('.heading .head_title').each((index, element) => {
           var json = [];
 
-          $('.head_title').each((index, element) => {
-            element.children.map((value) => {
-              let title = {};
-              title['name'] = value.data;
-              json.push(title);
-              console.log(json);
-            });
+          let item = {};
+          let category = {};
+          element.children.map((value) => {
+            item['name'] = value.data;
           });
-        }
+          $('.authorized').map((index, category) => {
+            category.childNodes.map((children) => {
+              let category1 = '';
+              let category2 = '';
+              children.children.map((child) => {
+                item['category1'] = child.data;
+              })
+              if(children.next) {
+                if(children.next.name == 'li') {
+                  children.next.children.map((innerChildren) => {
+                    if(innerChildren.data !== 'undefined') {
+                      item['category2'] = innerChildren.data;
+                    }
+                  })
+                }
+              }
+            })
+          })
+          json.push(item);
+          console.log(json);
+        });
       }
-      // response = JSON.parse(response.body);
-      // // console.log(response.listing);
-      // response = JSON.parse(response);
     })
   })
 
