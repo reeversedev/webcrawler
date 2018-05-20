@@ -53,8 +53,6 @@ router.get('/scrape', function (req, res, next) {
           });
           $('.authorized').map((index, category) => {
             category.childNodes.map((children) => {
-              let category1 = '';
-              let category2 = '';
               children.children.map((child) => {
                 item['category1'] = child.data;
               })
@@ -67,6 +65,11 @@ router.get('/scrape', function (req, res, next) {
                   })
                 }
               }
+            })
+          })
+          $('.yrs_exp').each((index, year) => {
+            year.children.map((val, i) => {
+              item['experience'] = val.data;
             })
           })
           json.push(item);
